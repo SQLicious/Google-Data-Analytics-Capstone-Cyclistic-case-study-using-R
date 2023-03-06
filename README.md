@@ -1,1 +1,2 @@
-# Google-Data-Analytics-Capstone-Project-Cyclistic-using R
+# Google-Data-Analytics-Capstone-Project-Cyclistic-Case study
+using R, Excel and Tableau
