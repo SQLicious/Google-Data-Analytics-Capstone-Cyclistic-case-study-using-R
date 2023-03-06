@@ -1,1 +1,1 @@
-# Google-Data-Analytics-Capstone-Cyclistic-case-study-using-R
+# Google-Data-Analytics-Capstone-Cyclistic-using R
