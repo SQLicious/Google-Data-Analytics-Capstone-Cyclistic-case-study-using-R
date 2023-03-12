@@ -1,6 +1,6 @@
 # Google-Data-Analytics-Capstone-Project-Cyclistic-Case study
 
-Table of Contents 
+##Table of Contents 
 Why this project?
 Case study introduction
 Scenario
