@@ -137,7 +137,7 @@ Click here to see the R script that was used to analyze the dataset. The R file 
 
 We conduct a descriptive analysis and export a summary file for further analysis.
 
-#### In Data Analysis We will Analyze To Find out the below stuff
+In Data Analysis We will Analyze To Find out the below stuff
 
 1. Missing Values
 2. All The Numerical Variables
@@ -153,7 +153,7 @@ Tableau Public was used to show some key trends and patterns. Microsoft PowerPoi
 
 Is used to present the key insights uncovered.
 
-**Step 6: ACT**
+**Step 6: Act**
 
 Prepared the deliverables the Director of marketing asked us to create, including the three top recommendations based on my analysis.
 
