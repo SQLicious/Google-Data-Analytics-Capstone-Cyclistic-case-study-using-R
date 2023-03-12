@@ -75,7 +75,7 @@ The data we will be using is Cyclistic historical trip data from June 2021 to Ma
 
 The sheer volume of observations in each file could be a challenge using Excel to wrangle the combined as Excel took a while to perform calculations on all rows. So, we will use R programming to clean and wrangle the data. Also, a sample of the combined dataset was decided to be better due to computational limitations.
 
-File Number of rows
+File name              Number of rows
 
 202106-divvy-tripdata 729595
 
