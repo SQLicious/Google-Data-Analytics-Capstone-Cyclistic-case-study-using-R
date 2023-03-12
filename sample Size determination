@@ -1,0 +1,37 @@
+## Explanation on how the sample sie was determined
+Sample Size formula from cuemath.com https://www.cuemath.com/sample-size-formula/
+
+##Section referenced 
+Using the Standard Formula
+Lets' look at the below-given equation. If the size of the population is small to moderate, then it is easier to know all the key values and thus the standard formula can be used. The standard formula for calculating the sample size is:
+
+Sample Size Formula = [z2 * p(1-p)] / e2 / 1 + [z2 * p(1-p)] / e2 * N]
+
+Where:
+
+z is the critical value of the normal distribution at the desired confidence level
+p is the estimated proportion of the attribute in the population
+e is the margin of error
+N is the population size
+
+For our analysis I used the following
+
+Desired Confidence Level : 99.99%
+Margin of Error : 0.2%
+Population Size:5,860,776 (this is the Total number of observations in the combined dataset that contains 12 months of cyclistyic data that is being used)
+p:50%
+
+Therefore 
+z=3.89
+p=0.5
+e=0.002
+N= 5,860,776
+
+#Sample size calculation
+Sample Size = [3.89 2 * 0.5 (1-0.5)] / 0.002 2 / 1 + [3.89 2 * 0.5 (1-0.5)] / 0.002 2 * 5860776] 
+Sample Size = [7.5721 * 0.25] / 0.000004 / [1 + (7.5721 * 0.25) / (0.000004 * 5860776)] 
+Sample Size = [1.893025] / [1 + (4.68275) / (23)] Sample Size = [1.893025] / [1 + (0.203599)] 
+Sample Size = [1.893025] / [1 + (203599)] 
+Sample Size = [1 + (203599)]/[(203599)]
+Sample Size = [(203600)]/[(203599)] 
+Sample Size ≈ 1104058
