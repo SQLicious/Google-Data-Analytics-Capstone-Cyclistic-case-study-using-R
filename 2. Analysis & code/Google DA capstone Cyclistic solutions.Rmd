@@ -137,9 +137,7 @@ tail(all_trips) #see the last 6 rows of data frame
 str(all_trips)  #See list of columns and data types (numeric, character, etc)
 summary(all_trips)  #Statistical summary of data. Mainly for numerics
 ```
-
 # Drop columns that are not needed for this analysis
-
 ```{r}
 all_trips <- all_trips %>%
   select(-c(start_lat, start_lng, end_lat, end_lng))
@@ -154,7 +152,6 @@ all_trips$month <- format(as.Date(all_trips$date), "%m")
 all_trips$day <- format(as.Date(all_trips$date), "%d")
 all_trips$day_of_week <- format(as.Date(all_trips$date), "%A")
 ```
-
 # Add a "ride_length" calculation to all_trips (in seconds)
 ```{r}
 all_trips <- all_trips %>% 
@@ -174,13 +171,13 @@ all_trips <- all_trips %>%
 any(all_trips$ride_length < 0)# post-check returns FALSE after we removed rows which had negative ride_length
 ```
 
-#Clean columns names and remove duplicates 
+# Clean columns names and remove duplicates 
 ```{r}
 df2 <- all_trips %>% 
   clean_names() %>% 
   unique()
 ```
-#Export this cleaned df to a CSV since data has been removed from the orginal combined dataset
+# Export this cleaned df to a CSV since data has been removed from the orginal combined dataset
 ```{r}
 #write_csv(df2, '2021-2022-tripdata_cleaned.csv')
 df <- read_csv('2021-2022-tripdata_cleaned.csv')
@@ -189,14 +186,12 @@ df <- read_csv('2021-2022-tripdata_cleaned.csv')
 # STEP 4: CONDUCT DESCRIPTIVE ANALYSIS
 #=====================================
 # Descriptive analysis on ride_length (all figures in seconds)
-
 ```{r}
 mean(df$ride_length) #straight average (total ride length / rides)
 median(df$ride_length) #midpoint number in the ascending array of ride lengths
 max(df$ride_length) #longest ride
 min(df$ride_length) #shortest ride
 summary(df$ride_length)# alternative that lists all in one function
-
 ```
 # Compare summary statistics on ride_length by Members and casual users 
 ```{r}
@@ -215,16 +210,15 @@ aggregate(df$ride_length ~ df$member_casual + df$day_of_week, , FUN = mean)
 df$day_of_week <- ordered(df$day_of_week, levels=c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
 aggregate(df$ride_length ~ df$member_casual + df$day_of_week, , FUN = mean)# re-run to view the results
 ```
-
 # Analyze ridership data by rider type and Day of the week
 #This code shows a temporary new column called "weekday" to the df dataframe, which represents the day of the week for each ride using the "wday" function.It then groups the data by "member_casual" (a variable indicating whether the rider was a member or a casual rider) and "weekday"(the variable we just created). It then calculates the number of rides and the average duration of rides for each group using the "summarise" function.Finally it sorts the data by "member_casual" and "weekday" columns.
 ```{r}
 df %>% 
   mutate(weekday = wday(started_at, label = TRUE)) %>%  #creates weekday field using wday()
-  group_by(member_casual, weekday) %>%  #groups by ridertype and weekday
+  group_by(member_casual, weekday) %>%                  #groups by ridertype and weekday
   summarise(number_of_rides = n() 
             ,average_duration = mean(ride_length)) %>%  # calculates the average ride length
-  arrange(member_casual, weekday) #sorts by ridertype and then Day of the week
+  arrange(member_casual, weekday)                       #sorts by ridertype and then Day of the week
 ```
 # Ok now lets go Visualize the number of rides by rider type
 ```{r}
@@ -236,10 +230,10 @@ df %>%
   arrange(member_casual, weekday)  %>% 
   ggplot(aes(x = weekday, y = number_of_rides, fill = member_casual)) +
   geom_col(position = "dodge")
+  
 ###This code creates a bar chart using ggplot, which displays the number of rides for each day of the week. The bars are grouped by rider type. The position of the bars is set to "dodge," which means they are side-by-side rather than stacked on top of each other
 ggsave("rides by ridertype.png",plot=last_plot(), width = NA, height= NA,
        path="/Users/roopm/OneDrive/Desktop/Cyclistic/Extract CSV")
-
 ```
 
 # Lets Visualize average duration of ride by rider type
@@ -331,9 +325,8 @@ top_10_station <- summary_stations %>%
   slice(1:10)
 head(top_10_station)
 print(top_10_station)
-
 ```
-#total count of riders of each membership type and each bike types
+# Total count of riders of each membership type and each bike types
 ```{r}
 total_riders <- data.frame(table(df$member_casual))
 total_types <- data.frame(table(df$rideable_type))
