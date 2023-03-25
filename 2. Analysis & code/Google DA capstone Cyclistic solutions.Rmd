@@ -1,0 +1,373 @@
+---
+title: "Cyclistic Bike share Case Study Solutions"
+author: "Roopmathi Gunna"
+date: "2023-02-22"
+output: html_document
+---
+
+This is an [R Markdown]Notebook. When you execute code within the notebook, the results appear beneath the code. 
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+## Set Working directory to local
+
+```{r}
+getwd()
+setwd("C:/Users/roopm/OneDrive/Desktop/Cyclistic/Extract CSV")
+```
+
+##install and load required packages 
+
+```{r}
+install.packages('tidyverse')
+install.packages('skimr')
+install.packages('janitor') # helps expedite the initial data exploration and cleaning 
+library(tidyverse) # for data import and data wrangling
+library(dplyr) # helps manipulate our data (creating new columns)
+library(lubridate) # for date functions
+library(skimr) #helps get quick summary of data
+library(ggplot2) #helps to visualize data
+library(readr)
+
+```
+#=====================
+# STEP 1: COLLECT DATA
+#=====================
+# Upload Divvy datasets (csv files) here
+
+```{r}
+divvy_tripdata_Jun_2021<-read.csv("202106-divvy-tripdata.csv")
+divvy_tripdata_Jul_2021<-read.csv("202107-divvy-tripdata.csv")
+divvy_tripdata_Aug_2021<-read.csv("202108-divvy-tripdata.csv")
+divvy_tripdata_Sept_2021<-read.csv('202109-divvy-tripdata.csv')
+divvy_tripdata_Oct_2021<-read.csv('202110-divvy-tripdata.csv')
+divvy_tripdata_Nov_2021<-read.csv('202111-divvy-tripdata.csv')
+divvy_tripdata_Dec_2021<-read.csv('202112-divvy-tripdata.csv')
+divvy_tripdata_Jan_2022<-read.csv('202201-divvy-tripdata.csv')
+divvy_tripdata_Feb_2022<-read.csv('202202-divvy-tripdata.csv')
+divvy_tripdata_Mar_2022<-read.csv('202203-divvy-tripdata.csv')
+divvy_tripdata_Apr_2022<-read.csv('202204-divvy-tripdata.csv')
+divvy_tripdata_May_2022<-read.csv('202205-divvy-tripdata.csv')
+```
+#====================================================
+# STEP 2: WRANGLE DATA AND COMBINE INTO A SINGLE FILE
+#====================================================
+
+#Comparing Column names of each file and Check for Column consistency
+#I do this because column names DO need to match perfectly before we can use a command to join them into one file
+
+
+```{r}
+colnames(divvy_tripdata_Jun_2021)
+colnames(divvy_tripdata_Jul_2021)
+colnames(divvy_tripdata_Aug_2021)
+colnames(divvy_tripdata_Sept_2021)
+colnames(divvy_tripdata_Oct_2021)
+colnames(divvy_tripdata_Nov_2021)
+colnames(divvy_tripdata_Dec_2021)
+colnames(divvy_tripdata_Jan_2022)
+colnames(divvy_tripdata_Feb_2022)
+colnames(divvy_tripdata_Mar_2022)
+colnames(divvy_tripdata_Apr_2022)
+colnames(divvy_tripdata_May_2022)
+
+```
+# Inspect the dataframes and look for incongruencies
+```{r}
+str(divvy_tripdata_Jun_2021)
+str(divvy_tripdata_Jul_2021)
+str(divvy_tripdata_Aug_2021)
+str(divvy_tripdata_Oct_2021)
+str(divvy_tripdata_Nov_2021)
+str(divvy_tripdata_Dec_2021)
+str(divvy_tripdata_Jan_2022)
+str(divvy_tripdata_Feb_2022)
+str(divvy_tripdata_Mar_2022)
+str(divvy_tripdata_Apr_2022)
+str(divvy_tripdata_May_2022)
+
+```
+#Combine the data from June 2021 to May 2022 into one data frame.
+```{r}
+combined_trip_data<-rbind(divvy_tripdata_Jun_2021,
+                          divvy_tripdata_Jul_2021,
+                          divvy_tripdata_Aug_2021,
+                          divvy_tripdata_Sept_2021,
+                          divvy_tripdata_Oct_2021,
+                          divvy_tripdata_Nov_2021,
+                          divvy_tripdata_Dec_2021,
+                          divvy_tripdata_Jan_2022,
+                          divvy_tripdata_Feb_2022,
+                          divvy_tripdata_Mar_2022,
+                          divvy_tripdata_Apr_2022,
+                          divvy_tripdata_May_2022)
+str(combined_trip_data)
+```
+# Export the combined raw file to CSV
+```{r}
+write_csv(combined_trip_data,"combined_trip_data.csv")
+```
+
+# The combined file is now 1GB in size containing 5860776 obs. of  13 variables. 
+# Due to the computational load, we need to take a random sample without replacement from total 5,860,776 obervations
+# Here is how the sample size was calculated (For full explanation refer my github repo)
+# Population size : 5,860,776
+# Confidence level : 99.99%
+# Margin of Error : 0.2
+# Sample size: 1,104,058
+# working on 1.1 million observations is still a good bargain 
+#creating sample dataframe from combined dataset
+```{r}
+sample_df<- sample_n(combined_trip_data,1104058,replace = F)
+str(sample_df)
+write_csv(sample_df,'sampled_dataset.csv')
+```
+#======================================================
+# STEP 3: CLEAN UP AND ADD DATA TO PREPARE FOR ANALYSIS
+#======================================================
+
+# Load the sample dataset we created earlier
+```{r}
+all_trips <- read_csv('sampled_dataset.csv')
+```
+
+# Inspect the new table that has been created
+```{r}
+colnames(all_trips)  #List of column names
+nrow(all_trips)  #How many rows are in data frame?
+dim(all_trips)  #Dimensions of the data frame?
+head(all_trips)  #See the first 6 rows of data frame.
+tail(all_trips) #see the last 6 rows of data frame
+str(all_trips)  #See list of columns and data types (numeric, character, etc)
+summary(all_trips)  #Statistical summary of data. Mainly for numerics
+```
+
+# Drop columns that are not needed for this analysis
+
+```{r}
+all_trips <- all_trips %>%
+  select(-c(start_lat, start_lng, end_lat, end_lng))
+colnames(all_trips)
+```
+# Add columns that list the date, month, day, and year of each ride
+#This will allow us to aggregate ride data for each month, day, or year.Before completing these operations we could only aggregate at the ride level
+```{r}
+all_trips$date <- as.Date(all_trips$started_at)
+all_trips$year <- format(as.Date(all_trips$date), "%Y")
+all_trips$month <- format(as.Date(all_trips$date), "%m")
+all_trips$day <- format(as.Date(all_trips$date), "%d")
+all_trips$day_of_week <- format(as.Date(all_trips$date), "%A")
+```
+
+# Add a "ride_length" calculation to all_trips (in seconds)
+```{r}
+all_trips <- all_trips %>% 
+  mutate(ride_length = ended_at - started_at)
+```
+# Check the table with the new columns
+```{r}
+str(all_trips)
+head(all_trips)
+```
+
+# some rows have negative ride length, so we remove rows which have negative ride_length
+```{r}
+any(all_trips$ride_length < 0)# Pre-check returns TRUE when all_trips data frame contains any row which has negative ride_length values
+all_trips <- all_trips %>%
+  filter(ride_length > 0)     # removes rows which have negative ride_length
+any(all_trips$ride_length < 0)# post-check returns FALSE after we removed rows which had negative ride_length
+```
+
+#Clean columns names and remove duplicates 
+```{r}
+df2 <- all_trips %>% 
+  clean_names() %>% 
+  unique()
+```
+#Export this cleaned df to a CSV since data has been removed from the orginal combined dataset
+```{r}
+#write_csv(df2, '2021-2022-tripdata_cleaned.csv')
+df <- read_csv('2021-2022-tripdata_cleaned.csv')
+```
+#=====================================
+# STEP 4: CONDUCT DESCRIPTIVE ANALYSIS
+#=====================================
+# Descriptive analysis on ride_length (all figures in seconds)
+
+```{r}
+mean(df$ride_length) #straight average (total ride length / rides)
+median(df$ride_length) #midpoint number in the ascending array of ride lengths
+max(df$ride_length) #longest ride
+min(df$ride_length) #shortest ride
+summary(df$ride_length)# alternative that lists all in one function
+
+```
+# Compare summary statistics on ride_length by Members and casual users 
+```{r}
+aggregate(df$ride_length ~ df$member_casual, FUN = mean)#computes the mean ride_length of all trips by members & casual riders
+aggregate(df$ride_length ~ df$member_casual, FUN = median)#computes the median ride_length of all trips by members & casual riders
+aggregate(df$ride_length ~ df$member_casual, FUN = max)#computes the longest ride_length of all trips by members & casual riders
+aggregate(df$ride_length ~ df$member_casual, FUN = min)# computes the shortest ride_length of all trips by members & casual riders
+```
+# Check the  average ride time by **each day** for members vs casual users
+```{r}
+aggregate(df$ride_length ~ df$member_casual + df$day_of_week, , FUN = mean)
+```
+# Notice that the Days of the week(DOW) are out of order 
+# Lets re-arrange the Data frame to display DOW as Monday, Tuesday etc.. using ordered()
+```{r}
+df$day_of_week <- ordered(df$day_of_week, levels=c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
+aggregate(df$ride_length ~ df$member_casual + df$day_of_week, , FUN = mean)# re-run to view the results
+```
+
+# Analyze ridership data by rider type and Day of the week
+#This code shows a temporary new column called "weekday" to the df dataframe, which represents the day of the week for each ride using the "wday" function.It then groups the data by "member_casual" (a variable indicating whether the rider was a member or a casual rider) and "weekday"(the variable we just created). It then calculates the number of rides and the average duration of rides for each group using the "summarise" function.Finally it sorts the data by "member_casual" and "weekday" columns.
+```{r}
+df %>% 
+  mutate(weekday = wday(started_at, label = TRUE)) %>%  #creates weekday field using wday()
+  group_by(member_casual, weekday) %>%  #groups by ridertype and weekday
+  summarise(number_of_rides = n() 
+            ,average_duration = mean(ride_length)) %>%  # calculates the average ride length
+  arrange(member_casual, weekday) #sorts by ridertype and then Day of the week
+```
+# Ok now lets go Visualize the number of rides by rider type
+```{r}
+df %>% 
+  mutate(weekday = wday(started_at, label = TRUE)) %>% 
+  group_by(member_casual, weekday) %>% 
+  summarise(number_of_rides = n()
+            ,average_duration = mean(ride_length)) %>% 
+  arrange(member_casual, weekday)  %>% 
+  ggplot(aes(x = weekday, y = number_of_rides, fill = member_casual)) +
+  geom_col(position = "dodge")
+###This code creates a bar chart using ggplot, which displays the number of rides for each day of the week. The bars are grouped by rider type. The position of the bars is set to "dodge," which means they are side-by-side rather than stacked on top of each other
+ggsave("rides by ridertype.png",plot=last_plot(), width = NA, height= NA,
+       path="/Users/roopm/OneDrive/Desktop/Cyclistic/Extract CSV")
+
+```
+
+# Lets Visualize average duration of ride by rider type
+```{r}
+df%>% 
+  mutate(weekday = wday(started_at, label = TRUE)) %>% 
+  group_by(member_casual, weekday) %>% 
+  summarise(number_of_rides = n()
+            ,average_duration = mean(ride_length)) %>% 
+  arrange(member_casual, weekday)  %>% 
+  ggplot(aes(x = weekday, y = average_duration, fill = member_casual)) +
+  geom_col(position = "dodge")
+ggsave("avg triplength by ridertype.png",plot=last_plot(), width = NA, height= NA,path="/Users/roopm/OneDrive/Desktop/Cyclistic/Extract CSV")
+
+```
+#=================================================
+# STEP 5: EXPORT SUMMARY FILE FOR FURTHER ANALYSIS
+#=================================================
+# Create csv files that we will use for further visualization in Excel and Tableau
+
+# Total and Average number of weekly rides by rider type
+```{r}
+summary_wd <- df %>% 
+  mutate(weekday = wday(started_at, label = TRUE)) %>%  
+  group_by(member_casual, weekday) %>%  
+  summarise(number_of_rides = n()
+            ,average_duration = mean(ride_length)) %>%    
+  arrange(member_casual, weekday)
+write_csv(summary_wd, "summary_ride_length_weekday.csv")
+
+##This code is summarizing the data in the "df" data frame by adding "weekday"
+#column which shows the day of the week for each ride start date using wday() 
+#Then, it groups the data by member type (member or casual) and weekday, and 
+#calculates the number of rides and the average ride length for each combination. 
+#The resulting table is arranged by member type and weekday. 
+#Finally, the summarized data is saved in a a CSV file called "summary_ride_length_weekday.csv."
+```
+
+# Total and Average number of monthly rides by rider type
+```{r}
+summary_month <- df %>% 
+  mutate(month = month(started_at, label = TRUE)) %>%  
+  group_by(month,member_casual) %>%  
+  summarise(number_of_rides = n()
+            ,average_duration = mean(ride_length)) %>%    
+  arrange(month, member_casual)
+write_csv(summary_month, "summary_ride_length_month.csv")
+
+##This code is summarizing the data in the "df" data frame by adding "month"
+#column which shows the month of each trip using month() funstion on  started_at field
+#Then, it groups the data by member type (member or casual) and month, and 
+#calculates the number of rides and the average ride length for each combination. 
+#The resulting table is arranged by member type and month. 
+#Finally, the summarized data is saved in a a CSV file called "summary_ride_length_month.csv"
+```
+
+# Which Stations are most popular among each user group
+```{r}
+summary_stations <- df %>% 
+  mutate(stations = start_station_name) %>%
+  drop_na(start_station_name) %>% 
+  group_by(start_station_name, member_casual) %>%  
+  summarise(number_of_rides = n()) %>%    
+  arrange(desc(number_of_rides))
+write_csv(summary_stations, "summary_stations.csv")
+
+##This code creates a summary of trips originating from each station, for each type of member (member or casual).
+#It first creates a new column called "stations" which is populated with the start station
+#name.Next drops any rows where the start station name is missing. then groups the remaining data by start station and member type.
+# then counts the number of rows (rides) in each group, 
+#and finally arranges the results by the number of rides in descending order.
+#The resulting summary is written to a CSV file called "summary_stations.csv".
+```
+# Separate the popular_stations data frame by rider type
+```{r}
+popular_stations_member <- summary_stations[summary_stations$member_casual == 'member',]
+popular_stations_casual <- summary_stations[summary_stations$member_casual == 'casual',]
+head(popular_stations_member)
+head(popular_stations_casual)
+write_csv(popular_stations_casual, 'Popular_stations_ used by casual.csv')
+write_csv(popular_stations_member, 'Popular_stations_ used by members.csv')
+```
+# Get the top 10 popular stations among all riders, member riders and casual riders
+```{r}
+top_10_station <- summary_stations %>%
+#  group_by(start_station_name) %>%
+#  summarise(number_of_rides = n()) %>%
+  arrange(desc(number_of_rides)) %>%
+  slice(1:10)
+head(top_10_station)
+print(top_10_station)
+
+```
+#total count of riders of each membership type and each bike types
+```{r}
+total_riders <- data.frame(table(df$member_casual))
+total_types <- data.frame(table(df$rideable_type))
+write_csv(total_riders, "total_riders.csv")
+write_csv(total_types, "total_types.csv")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
