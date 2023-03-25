@@ -14,7 +14,6 @@ Try executing this chunk by clicking the *Run* button within the chunk or by pla
 getwd()
 setwd("C:/Users/roopm/OneDrive/Desktop/Cyclistic/Extract CSV")
 ```
-
 ##install and load required packages 
 
 ```{r}
@@ -27,7 +26,6 @@ library(lubridate) # for date functions
 library(skimr) #helps get quick summary of data
 library(ggplot2) #helps to visualize data
 library(readr)
-
 ```
 #=====================
 # STEP 1: COLLECT DATA
@@ -52,9 +50,8 @@ divvy_tripdata_May_2022<-read.csv('202205-divvy-tripdata.csv')
 # STEP 2: WRANGLE DATA AND COMBINE INTO A SINGLE FILE
 #====================================================
 
-#Comparing Column names of each file and Check for Column consistency
+#Compare Column names of each file and Check for Column consistency
 #I do this because column names DO need to match perfectly before we can use a command to join them into one file
-
 
 ```{r}
 colnames(divvy_tripdata_Jun_2021)
@@ -84,9 +81,8 @@ str(divvy_tripdata_Feb_2022)
 str(divvy_tripdata_Mar_2022)
 str(divvy_tripdata_Apr_2022)
 str(divvy_tripdata_May_2022)
-
 ```
-#Combine the data from June 2021 to May 2022 into one data frame.
+# Combine the data from June 2021 to May 2022 into one data frame.
 ```{r}
 combined_trip_data<-rbind(divvy_tripdata_Jun_2021,
                           divvy_tripdata_Jul_2021,
