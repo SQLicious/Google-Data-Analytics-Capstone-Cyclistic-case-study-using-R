@@ -152,7 +152,7 @@ all_trips$month <- format(as.Date(all_trips$date), "%m")
 all_trips$day <- format(as.Date(all_trips$date), "%d")
 all_trips$day_of_week <- format(as.Date(all_trips$date), "%A")
 ```
-# Add a "ride_length" calculation to all_trips (in seconds)
+# Add a "ride_length" calculated columns to all_trips dataframe (in seconds)
 ```{r}
 all_trips <- all_trips %>% 
   mutate(ride_length = ended_at - started_at)
