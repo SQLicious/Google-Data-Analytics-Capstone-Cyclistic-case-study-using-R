@@ -106,16 +106,17 @@ str(combined_trip_data)
 ```{r}
 write_csv(combined_trip_data,"combined_trip_data.csv")
 ```
-
+```{r}
 # The combined file is now 1GB in size containing 5860776 obs. of  13 variables. 
-# Due to the computational load, we need to take a random sample without replacement from total 5,860,776 obervations
-# Here is how the sample size was calculated (For full explanation refer my github repo)
-# Population size : 5,860,776
-# Confidence level : 99.99%
-# Margin of Error : 0.2
-# Sample size: 1,104,058
-# working on 1.1 million observations is still a good bargain 
-#creating sample dataframe from combined dataset
+Due to the computational load, we need to take a random sample without replacement from total 5,860,776 obervations
+Here is how the sample size was calculated (For full explanation refer my github repo)
+Population size : 5,860,776
+Confidence level : 99.99%
+Margin of Error : 0.2
+Sample size: 1,104,058
+Working on 1.1 million observations is still a good bargain 
+```
+# Creating sample dataframe from combined dataset
 ```{r}
 sample_df<- sample_n(combined_trip_data,1104058,replace = F)
 str(sample_df)
