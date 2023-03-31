@@ -149,9 +149,10 @@ In Data Analysis We will Analyze To Find out the below stuff
 
 **Step 5: Share**
 
-Tableau Public was used to show some key trends and patterns. Microsoft PowerPoint
+Tableau Public was used to show some key trends and patterns. Microsoft PowerPoint is used to present the key insights uncovered.
 
-Is used to present the key insights uncovered.
+Cyclistic Bike Share Tableau story
+<https://public.tableau.com/shared/T8Y8TWSN6?:display_count=n&:origin=viz_share_link>
 
 **Step 6: Act**
 
