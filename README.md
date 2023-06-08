@@ -133,19 +133,14 @@ Clean column names and check for duplicate records in rows.
 
 **Step 4: Analyze the Data**
 
-Click here to see the R script that was used to analyze the dataset. The R file includes a summary of steps performed to identify trends or relationships we found in the data.
+Summary of steps performed to identify trends or relationships I found in the data. Export a summary file for further analysis.
 
-We conduct a descriptive analysis and export a summary file for further analysis.
-
-In Data Analysis We will Analyze To Find out the below stuff
-
-1. Missing Values
-2. All The Numerical Variables
-3. Distribution of the Numerical Variables
-4. Categorical Variables
-5. Cardinality of Categorical Variables
-6. Outliers
-7. Relationship between an independent and dependent features (SalePrice)
+1. Distribution of the Numerical Variables
+2. Review Categorical Variables
+3. Check Cardinality of Categorical Variables
+4. Check Outliers
+5. Review Relationship between independent variables  and dependent variables
+6. Descriptive stats analysis
 
 **Step 5: Share**
 
