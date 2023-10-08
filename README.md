@@ -117,30 +117,30 @@ A quick review of the datasets for completeness revealed that 'start\_station\_n
 
 **Step 3: Process (Data Wrangling)**
 
-Import data in R studio.
+Imported data in R studio.
 
-Make columns consistent and merge them into a single data frame.
+Made columns consistent and merged them into a single data frame.
 
-Check for and treat missing values.
+Checked for and treated missing values.
 
-Transform data-format types.
+Transformed data-format types.
 
-Add new columns to calculate the following.
+Added new columns
 
 Removed the rows where trip duration is negative.
 
-Clean column names and check for duplicate records in rows.
+Cleaned column names and checked for duplicate records in rows.
 
 **Step 4: Analyze the Data**
 
-Summary of steps performed to identify trends or relationships I found in the data. Export a summary file for further analysis.
+Summary of steps performed to identify trends or relationships I found in the data. Exported a summary file for further analysis.
 
-1. Distribution of the Numerical Variables
-2. Review Categorical Variables
-3. Check Cardinality of Categorical Variables
-4. Check Outliers
-5. Review Relationship between independent variables  and dependent variables
-6. Descriptive stats analysis
+1. Reviewed the Distribution of the Numerical Variables
+2. Reviewed Categorical Variables
+3. Checked Cardinality of Categorical Variables
+4. Checked Outliers
+5. Review Relationships between independent variables  and dependent variables
+6. Performed Descriptive stats analysis
 
 **Step 5: Share**
 
