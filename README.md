@@ -1,5 +1,12 @@
 # **Google Data Analytics Capstone Project Cyclistic-Case study**
 
+
+This repository houses the final capstone project for the "Google Data Analytics" professional certificate on Coursera. It features a comprehensive dashboard demonstrating the practical application of data analysis and visualization in a business context.
+
+**Key Highlights:**
+- **Dashboard**: Explore the interactive visualization created in Tableau, providing clear insights derived from complex data analyses.
+-  [View Dashboard](https://public.tableau.com/shared/27X7YYZ5X?:display_count=n&:origin=viz_share_link)
+
 **Table of Contents**
 
 Why this project?
